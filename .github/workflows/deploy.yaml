@@ -31,3 +31,22 @@ jobs:
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*"
+            # ... (위에는 S3 업로드 단계가 있음) ...
+
+      # 5. EC2에 접속해서 S3 파일을 웹 루트(/var/www/html)로 다운로드
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user           # (우분투라면 ubuntu로 변경!)
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            # 1. S3에서 파일 다운로드 (동기화)
+            sudo aws s3 sync s3://${{ env.S3_BUCKET_NAME }} /var/www/html --delete
+            
+            # 2. (선택사항) 권한 정리 (ec2-user가 수정 가능하게)
+            sudo chown -R ec2-user:ec2-user /var/www/html
+            
+            # 3. Nginx 재시작 (설정 변경 없으면 생략 가능하지만 하는 게 안전)
+            sudo systemctl restart nginx
