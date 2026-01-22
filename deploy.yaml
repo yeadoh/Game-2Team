@@ -1,38 +1,22 @@
-name: Deploy to AWS S3
+name: Upload Source to S3
 
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 실행
+      - main
 
 env:
-  AWS_REGION: ap-northeast-2              # 리전 (서울)
-  S3_BUCKET_NAME: game-public-s3-bucket-123  # [수정필요] 본인 S3 버킷 이름
-  SOURCE_DIR: ./build                     # [수정필요] 업로드할 폴더 (React는 build, Vite는 dist, 일반 HTML은 ./)
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: game-public-s3-bucket-123  # [확인]
+  SOURCE_DIR: ./                # [중요] 현재 폴더 전체를 의미
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. 코드 가져오기
       - name: Checkout source code
         uses: actions/checkout@v3
 
-      # 2. (선택사항) Node.js 세팅 & 빌드 
-      # 리액트/Vue 등이 아니라 그냥 HTML/CSS 파일만 있다면 이 단계(2번)는 통째로 지워도 됩니다.
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          
-      - name: Install Dependencies
-        run: npm install
-        
-      - name: Build
-        run: npm run build
-
-      # 3. AWS 인증 정보 설정 (GitHub Secrets 활용)
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -40,8 +24,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 4. S3로 업로드 (sync 명령어 사용)
-      # --delete 옵션: 로컬에 없는 파일은 S3에서도 삭제 (동기화)
-      - name: Deploy to S3
+      # .git 폴더나 github 설정 파일은 굳이 올릴 필요 없으니 제외(exclude)
+      - name: Upload to S3
         run: |
-          aws s3 sync ${{ env.SOURCE_DIR }} s3://${{ env.S3_BUCKET_NAME }} --delete
+          aws s3 sync ${{ env.SOURCE_DIR }} s3://${{ env.S3_BUCKET_NAME }} \
+            --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*"
