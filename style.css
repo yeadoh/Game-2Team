@@ -1,0 +1,103 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #f7f7f7;
+  font-family: 'Courier New', monospace;
+}
+
+.game-container {
+  text-align: center;
+}
+
+#gameCanvas {
+  border: 2px solid #535353;
+  background: #fff;
+  display: block;
+  margin: 20px auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.score {
+  font-size: 24px;
+  font-weight: bold;
+  color: #535353;
+  margin-bottom: 10px;
+}
+
+.high-score {
+  font-size: 16px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.instructions {
+  color: #535353;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.game-over {
+  font-size: 32px;
+  font-weight: bold;
+  color: #535353;
+  margin-top: 20px;
+  display: none;
+}
+
+.restart-btn {
+  display: none;
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  background: #535353;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-family: 'Courier New', monospace;
+}
+
+.restart-btn:hover {
+  background: #333;
+}
+
+.leaderboard {
+  margin-top: 30px;
+  padding: 20px;
+  background: white;
+  border: 2px solid #535353;
+  border-radius: 8px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.leaderboard h3 {
+  margin-bottom: 15px;
+  color: #535353;
+}
+
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.leaderboard-item:last-child {
+  border-bottom: none;
+}
+
+.status {
+  font-size: 12px;
+  color: #888;
+  margin-top: 10px;
+}
